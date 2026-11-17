@@ -1,0 +1,11 @@
+---
+name: Update all pip3 packages
+command: pip3 list --outdated --format=freeze | awk -F'==' '!/^$/ {print $1}' | xargs -r -n 1 pip3 install -U --disable-pip-version-check
+tags: [
+  "python"
+]
+description: Update all your pip3 packages in one go.
+source_url: "https://github.com/nrelab/cognix-workflows/issues/#"
+author: Kirill Kulikov, csaper
+author_url: "https://github.com/kikulikov, https://github.com/csaper"
+shells: []
