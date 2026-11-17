@@ -21,7 +21,7 @@ arguments:
   - name: notification_body
     description: The body of the notification
     default_value: body
-  - name: deep_link
+  - name: deeplink
     description: A deeplink for the notification (eg. `app://open.my.app`)
 author: Odin Asbjørnsen
 author_url: https://github.com/oas004

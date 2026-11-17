@@ -1,6 +1,6 @@
 ---
 name: Set an index in an array to a value
-command: "{{array_name}}[{{index}}]={{value}}"
+command: "{{array_name}}[{{array_index}}]={{value}}"
 tags:
   - shell
 description: Makes an empty array and assigns it to variable "array_name"

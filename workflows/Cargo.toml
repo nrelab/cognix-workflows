@@ -11,9 +11,12 @@ cognix-workflows-types = {path = "../workflow-types" }
 
 [build-dependencies]
 anyhow = "1.0"
+cognix-workflows-types = {path = "../workflow-types" }
 convert_case = "0.11.0"
-memmap = "0.7.0"
 serde_yaml = "0.9.34"
 uneval = {git = "https://github.com/nrelab/cognix-vendor"}
 walkdir = "2.3.2"
-cognix-workflows-types = {path = "../workflow-types" }
+
+[dev-dependencies]
+serde_yaml = "0.9.34"
+walkdir = "2.3.2"

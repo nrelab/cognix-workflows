@@ -2,45 +2,37 @@ name: CI
 
 on:
   pull_request:
+  push:
+    branches: [main]
   workflow_dispatch:
 
 jobs:
-  lints:
-    name: Formatting + Clippy
+  lint-and-test:
+    name: Format + Clippy + Tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Check typos
-        uses: crate-ci/typos@master
+        uses: crate-ci/typos@v1
 
       - name: Install Rust toolchain
-        uses: actions-rs/toolchain@v1
+        uses: dtolnay/rust-toolchain@stable
         with:
-          profile: minimal
-          toolchain: stable
-          override: true
           components: rustfmt, clippy
 
-      - name: Run cargo build
-        uses: actions-rs/cargo@v1
-        with:
-          command: build
+      - name: Cache cargo registry/target
+        uses: Swatinem/rust-cache@v2
 
-      - name: Run cargo fmt
-        uses: actions-rs/cargo@v1
-        with:
-          command: fmt
+      - name: Run cargo fmt check
+        run: cargo fmt --all -- --check
 
       - name: Run cargo clippy
-        uses: actions-rs/cargo@v1
-        with:
-          command: clippy
-          args: -- -A warnings
+        run: cargo clippy --all -- -D warnings
 
-      - name: Run clippy on tests
-        uses: actions-rs/cargo@v1
-        with:
-          command: clippy
-          args: --tests -- -A warnings
+      - name: Run cargo build (generates workflow code from specs)
+        run: cargo build --workspace
+
+      - name: Run cargo test (includes spec validation)
+        run: cargo test --workspace
