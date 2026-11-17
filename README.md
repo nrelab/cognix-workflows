@@ -103,3 +103,18 @@ A good workflow is one that includes a command with many flags or arguments or o
 - **An accurate tag** to categorize the workflow. Avoid repetitive tags to keep search results useful.
 - **A description** for the workflow and each argument, if applicable.
 - **A default value** for each argument, if applicable.
+
+## Repository Structure
+
+This repository contains two publishable artifacts, both generated from the YAML specs in [`specs/`](specs/):
+
+| Artifact | Path | Version | Consumer | Build |
+|----------|------|---------|----------|-------|
+| Rust crate | `workflows/` | `0.1.0` | Cognix desktop app | `cargo build` |
+| npm package | `build_ts/` | `1.0.10` | commands.dev / web | `npm run build` |
+
+- **`workflows/`** — A Cargo workspace with `workflow-types` (shared serde types) and `workflows` (generated Rust code). `workflows/build.rs` reads every spec at build time and emits one Rust module per workflow into `src/generated_workflows/` (gitignored). See [`build_ts/README.md`](build_ts/README.md) for the npm side.
+
+- **`specs/`** — The source of truth: 332 YAML workflow specs organized by topic (docker, ssl, nativescript, etc.). Each spec is validated by the Rust spec-consistency test (`cargo test`) and by `specs.schema.json` in CI.
+
+- **`.github/workflows/`** — `ci.yaml` runs fmt/clippy/tests; `publish.yaml` bumps and publishes the npm package to npm on pushes to `main` that touch `specs/*` or `build_ts/*`.
