@@ -20,7 +20,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          token: ${{ secrets.GH_RUN_WORKFLOW_PAT }}
+          token: ${{ secrets.GITHUB_TOKEN }}
         # Install all dependencies
       - name: install
         run: npm --prefix build_ts/ install
@@ -32,7 +32,7 @@ jobs:
       - name: "Automated Version Bump"
         uses: "phips28/gh-action-bump-version@master"
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_RUN_WORKFLOW_PAT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PACKAGEJSON_DIR:  'build_ts'
           TARGET-BRANCH: 'main'
       - name: Publish to npm
