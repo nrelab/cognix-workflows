@@ -59,14 +59,14 @@ jobs:
       - name: Cache cargo registry/target
         uses: Swatinem/rust-cache@v2
 
+      - name: Run cargo build (generates workflow code from specs)
+        run: cargo build --workspace
+
       - name: Run cargo fmt check
         run: cargo fmt --all -- --check
 
       - name: Run cargo clippy
         run: cargo clippy --all -- -D warnings
-
-      - name: Run cargo build (generates workflow code from specs)
-        run: cargo build --workspace
 
       - name: Run cargo test (includes spec validation)
         run: cargo test --workspace
