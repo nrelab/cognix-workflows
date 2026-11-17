@@ -17,6 +17,38 @@ jobs:
       - name: Check typos
         uses: crate-ci/typos@v1
 
+      - name: Validate specs against JSON schema
+        run: |
+          pip install jsonschema pyyaml
+          python3 - <<'EOF'
+          import json, yaml, sys
+          from pathlib import Path
+          import jsonschema
+
+          schema = json.loads(Path("specs.schema.json").read_text())
+          validator = jsonschema.Draft7Validator(schema)
+          errors = []
+
+          spec_paths = sorted(
+              [p for ext in ("yaml", "yml") for p in Path("specs").rglob(f"*.{ext}")]
+          )
+          for path in spec_paths:
+              try:
+                  doc = yaml.safe_load(path.read_text())
+              except Exception as e:
+                  errors.append(f"{path}: YAML parse error: {e}")
+                  continue
+              for err in validator.iter_errors(doc):
+                  errors.append(f"{path}: {err.message} (at {list(err.path)})")
+
+          if errors:
+              print("Spec schema validation failed:")
+              for e in errors:
+                  print(f"  {e}")
+              sys.exit(1)
+          print(f"Validated {len(spec_paths)} specs against specs.schema.json")
+          EOF
+
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
         with:
